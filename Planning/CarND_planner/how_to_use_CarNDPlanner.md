@@ -25,7 +25,7 @@ git clone https://github.com/udacity/CarND-Path-Planning-Project.git
 ~~~
 
 ### Dependencies
-![dependencies](./media/CarND_planner_dependencies.PNG)
+![CarND_planner_dependencies](https://user-images.githubusercontent.com/59784459/87184943-da2ee700-c323-11ea-8ad1-03d00f24ec4e.PNG)
 우리는 linux 기반이므로 uWebSockets만 잘 설정해주면 된다.
 1) 방법 1: 권한을 주고 install-ubuntu.sh를 실행시킨다.
 CarNd-Path-Planner-Project 파일에서 명령창을 키고 다음 명령어 입력
