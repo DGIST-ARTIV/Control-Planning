@@ -76,7 +76,7 @@ class Scope(object):
                  ax,fn,
                  xmax=60,ymax =10,
                  xstart=0, ystart=0,
-                 title='PID control',xlabel='Time(second)',ylabel='Velocity(m/s)'):
+                 title='PID control',xlabel='Time(second)',ylabel='Velocity(km/h)'):
 
         self.xmax = xmax #x축 길이
         self.xstart = xstart #x축 시작점
