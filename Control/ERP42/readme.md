@@ -1,7 +1,7 @@
 # ERP42 Control
-ERP42 차량의 제어 유틸리티를 개발하는 파트입니다.
-_Author: Seunggi Lee
-__Date: 2020.07.11
+ERP42 차량의 제어 유틸리티를 개발하는 파트입니다.  
+_Author: Seunggi Lee  
+__Date: 2020.07.11  
 
 ## ERP42와 컴퓨터 연결 방법
 1. ERP42 좌측 하단에 RS232 to USB 케이블을 찾는다.
