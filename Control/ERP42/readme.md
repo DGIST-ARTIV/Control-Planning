@@ -1,6 +1,6 @@
 # ERP42 Control
 ERP42 차량의 제어 유틸리티를 개발하는 파트입니다.  
-_Author: Seunggi Lee_
+_Author: Seunggi Lee_  
 __Date: 2020.07.11__  
 
 ## ERP42와 컴퓨터 연결 방법
