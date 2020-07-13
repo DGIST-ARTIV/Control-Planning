@@ -30,7 +30,7 @@ sudo chmod 666 /dev/ttyUSB0
 ### 만약 sudo chmod 666/dev/ttyUSB0 명령어를 사용하여도 연결이 되지 않는다면?
 1. cmd 창에 ls /dev를 입력한다.
 2. USB 포트 이름을 확인하고 만약 이름이 다르다면 그에 맞게 ttyUSB 뒤의 숫자를 변경해준다.
-3. 이 과정이 번거롭다면, 다음 링크로 들어가서 UBUNTU에 연결되어 있는 device에 이름을 부여해보자.[링크](https://github.com/shinkansan/ARTIV/blob/master/Sensors/setting/readme.md)
+3. 이 과정이 번거롭다면, 다음 링크로 들어가서 UBUNTU에 연결되어 있는 device에 이름을 부여해보자. [링크](https://github.com/shinkansan/ARTIV/blob/master/Sensors/setting/readme.md)
 4. 이래도 안된다? 알아서 잘 해보셈. ㅡㅡ
 
 ## ERP42의 제어 방법  
