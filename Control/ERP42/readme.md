@@ -30,7 +30,8 @@ sudo chmod 666 /dev/ttyUSB0
 ### 만약 sudo chmod 666/dev/ttyUSB0 명령어를 사용하여도 연결이 되지 않는다면?
 1. cmd 창에 ls /dev를 입력한다.
 2. USB 포트 이름을 확인하고 만약 이름이 다르다면 그에 맞게 ttyUSB 뒤의 숫자를 변경해준다.
-3. 이 과정이 번거롭다면, 
+3. 이 과정이 번거롭다면, 다음 링크로 들어가서 UBUNTU에 연결되어 있는 device에 이름을 부여해보자.[링크](https://github.com/shinkansan/ARTIV/blob/master/Sensors/setting/readme.md)
+4. 이래도 안된다? 알아서 잘 해보셈. ㅡㅡ
 
 ## ERP42의 제어 방법  
 기본적으로 ERP42의 PID 제어 코드는 ROS2로 짜여있다.   
@@ -38,7 +39,7 @@ sudo chmod 666 /dev/ttyUSB0
 ```
 ros2 run ros1_bridge dynamic_bridge --bridge-all-topics 
 ```
-명령어를 실행시켜야 한다.  
+다음 명령어를 실행시켜야 한다.  
 통신을 ROS2 버전으로 사용할 경우, 그냥 바로 사용하면 된다.
 1. ERP42와 컴퓨터를 연결하여 통신이 되는지 확인한다.
 2. 다음 링크에서 pid_viewer_erp42_0711.py, pid_viewer.ui를 다운받는다. [링크](./pid_ui_erp42/0711)
