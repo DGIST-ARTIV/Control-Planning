@@ -35,9 +35,9 @@ sudo chmod 666 /dev/ttyUSB0
 ## ERP42의 제어 방법  
 기본적으로 ERP42의 PID 제어 코드는 ROS2로 짜여있다.   
 따라서 통신을 ROS1 버전으로 사용할 경우,  
-'''
+```
 ros2 run ros1_bridge dynamic_bridge --bridge-all-topics 
-'''
+```
 명령어를 실행시켜야 한다.  
 통신을 ROS2 버전으로 사용할 경우, 그냥 바로 사용하면 된다.
 1. ERP42와 컴퓨터를 연결하여 통신이 되는지 확인한다.
