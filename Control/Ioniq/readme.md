@@ -34,7 +34,7 @@ roslaunch dbw_ioniq_bridge dbw_ioniq_bridge.launch
 1. **여호영** 작성 바람
 
 
-## Ioniq의 제어 방법  
+## Ioniq의 제어 유틸리티 사용 방법  
 ERP42와 마찬가지로 IONIQ의 PID 제어 코드는 ROS2로 짜여있다.   
 1. IONIQ과 컴퓨터를 연결하여 통신이 되는지 확인한다.
 2. 다음 링크에서 pid_viewer_0707.py, pid_viewer_0707.ui를 다운받는다. [링크](./pid_ui/0707)
