@@ -31,7 +31,11 @@ roslaunch dbw_ioniq_bridge dbw_ioniq_bridge.launch
 
 
 ## Ioniq과 컴퓨터 연결 방법(자동 verison)
-1. **여호영** 작성 바람
+1. 다음 링크에서 dbw_ioniq_v2_release(Socketcan)와 ros_canopen.zip을 다운받는다. [링크](https://github.com/DGIST-ARTIV/ARTIV_Communication/tree/master/dbw_ioniq)
+2. dbw_ioniq_v2_release와 ros_canopen을 catkin_ws에 넣고 catkin_make를 한다.
+3. dbw_ioniq_v2_release에서 run_modeprobe.sh를 실행한다.
+4. 오류가 없으면 통신 끝!
+5. 오류 생기면 호영이에게 문의바람.
 
 
 ## Ioniq의 제어 유틸리티 사용 방법  
