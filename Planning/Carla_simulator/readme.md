@@ -1,4 +1,4 @@
-# How_to_install_CARLA
+# How to install CARLA simulator
 ## Building CARLA
 확인할것!
 1. Ubuntu 버전확인: Ubuntu 18.04인지 확인하자. Ubuntu 16.04에서는 기본 컴파일러로인해 동작 불가능
