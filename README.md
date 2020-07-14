@@ -8,4 +8,4 @@
 
 코딩, 자동제어
 
-<center><img src="https://user-images.githubusercontent.com/59792475/87428588-840cbd00-c61d-11ea-8bbb-6b7a2d56f91a.png" width="40%" height="40%"/></img></center>
+<img src="https://user-images.githubusercontent.com/59792475/87428588-840cbd00-c61d-11ea-8bbb-6b7a2d56f91a.png" align="center" width="40%" height="40%"/></img>
