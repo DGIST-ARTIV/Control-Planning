@@ -3,24 +3,41 @@ Ioniq 차량의 제어 유틸리티를 개발하는 파트입니다.
 _Author: Seunggi Lee_  
 __Date: 2020.07.14__  
 
-## Ioniq과 컴퓨터 연결 방법(수동 version)
-1. 
-
-## Ioniq과 컴퓨터 연결 방법(자동 verison)
-
-
-
-
-## ERP42의 제어 방법  
-기본적으로 ERP42의 PID 제어 코드는 ROS2로 짜여있다.   
-따라서 통신을 ROS1 버전으로 사용할 경우,  
+## Ioniq과 컴퓨터 연결 방법(수동 version)  
+Ioniq의 CAN 통신은 ROS1으로 짜여있고, 제어 코드는 ROS2로 짜여있기 때문에 제어를 하기 위해서는 ros bridge를 꼭 켜야한다.  
+하지만 차량과의 연결만 필요하고, 제어가 필요없다면 ros1만 켜도 무방하다.
+1. ros1을 실행한다.
+2. ros2를 실행한다.(제어 필요없으면 넘어가도 됨.)
+3. ros bridge를 실행한다.(제어 필요없으면 넘어가도 됨.)
 ```
 ros2 run ros1_bridge dynamic_bridge --bridge-all-topics 
 ```
-다음 명령어를 실행시켜야 한다.  
-통신을 ROS2 버전으로 사용할 경우, 그냥 바로 사용하면 된다.
-1. ERP42와 컴퓨터를 연결하여 통신이 되는지 확인한다.
-2. 다음 링크에서 pid_viewer_erp42_0711.py, pid_viewer.ui를 다운받는다. [링크](./pid_ui_erp42/0711)
-3. ros2를 실행시키고 pid_viewer_erp42_0711.py 파일을 실행시킨다.
-4. k_p = 2.5, k_i = 0.1, k_d = 1, Anti_windup_guard = 40으로 맞출 경우 대략적인 pid 제어가 되는 것을 확인할 수 있다.
-5. 만약 current_speed와 desired_speed를 그래프로 나타내어 비교하고 싶은 경우, 다음 링크에서 graph_visulization_erp42.py를 다운 받고 실행시키면 된다. [링크](./pid_graph_erp42/graph_visulization_erp42.py)
+4. cmd 창에 다음 명령어 4개를 입력한다.
+```
+sudo modprobe can
+sudo modprobe kvaser_usb
+sudo ip link set can0 type can bitrate 500000
+sudo ifconfig can0 up
+```
+5. 다음 링크에서 dbw_ioniq_v2_release(Socketcan)와 ros_canopen.zip을 다운받는다. [링크](https://github.com/DGIST-ARTIV/ARTIV_Communication/tree/master/dbw_ioniq)
+6. catkin_ws/src에 dwb_ioniq_v2_release와 ros_canopen을 넣는다.
+7. catkin_ws에서 catkin_make를 한다.
+8. catkin_make가 성공적으로 되면, 다음 명령어를 입력한다.
+```
+roslaunch dbw_ioniq_bridge dbw_ioniq_bridge.launch
+```
+9. 오류가 없으면 통신 끝!
+10. 오류가 생기면 호영이에게 문의바람.
+
+
+## Ioniq과 컴퓨터 연결 방법(자동 verison)
+1. **여호영** 작성 바람
+
+
+## Ioniq의 제어 방법  
+ERP42와 마찬가지로 IONIQ의 PID 제어 코드는 ROS2로 짜여있다.   
+1. IONIQ과 컴퓨터를 연결하여 통신이 되는지 확인한다.
+2. 다음 링크에서 pid_viewer_0707.py, pid_viewer_0707.ui를 다운받는다. [링크](./pid_ui/0707)
+3. ros2를 실행시키고 pid_viewer_0707.py 파일을 실행시킨다.
+4. k_p = 14.5, k_i = 0.25, k_d = 1, Anti_windup_guard = 70으로 맞출 경우 대략적인 pid 제어가 되는 것을 확인할 수 있다.
+5. 만약 current_speed와 desired_speed를 그래프로 나타내어 비교하고 싶은 경우, 다음 링크에서 pid_graph_0707.py를 다운 받고 실행시키면 된다. [링크](./pid_graph_ioniq)
