@@ -46,7 +46,7 @@ ERP42와 마찬가지로 IONIQ의 PID 제어 코드는 ROS2로 짜여있다.
 4. k_p = 14.5, k_i = 0.25, k_d = 1, Anti_windup_guard = 70으로 맞출 경우 대략적인 pid 제어가 되는 것을 확인할 수 있다.
 5. 만약 current_speed와 desired_speed를 그래프로 나타내어 비교하고 싶은 경우, 다음 링크에서 pid_graph_0707.py를 다운 받고 실행시키면 된다. [링크](./pid_graph_ioniq)
 
-### Ioniq 제어 유틸리티 설명
+## Ioniq 제어 유틸리티 설명
 **1. 사용하는 주요 Topic에 대한 설명**
 
 ![Screenshot from 2020-07-15 23-02-03](https://user-images.githubusercontent.com/59784459/87555065-e930e300-c6ef-11ea-911b-481603ca68a4.png)
