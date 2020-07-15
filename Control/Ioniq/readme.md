@@ -57,6 +57,8 @@ ERP42와 마찬가지로 IONIQ의 PID 제어 코드는 ROS2로 짜여있다.
 
 ![Screenshot from 2020-07-15 23-06-10](https://user-images.githubusercontent.com/59784459/87555074-ed5d0080-c6ef-11ea-8b85-9d7bd937ed92.png)
 
+dbw_ioniq_node와 dbw_cmd_node에 더 자세히 알고 싶다면? 다음 링크를 참조~
+[링크](https://docs.google.com/document/d/1Mvyvs1Tt20U99uA4o_h4c2-KB7s64NOQz6vd_-SGwh4/edit?usp=sharing).  
 3. RQT
 ![Screenshot from 2020-07-15 23-06-23](https://user-images.githubusercontent.com/59784459/87555082-efbf5a80-c6ef-11ea-821c-384742312e84.png)
 
