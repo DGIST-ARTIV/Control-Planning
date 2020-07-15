@@ -1,5 +1,5 @@
 # Planning
-ERP42와 Ioniq의 제어를 담당하는 파트입니다.
+ERP42와 Ioniq의 Path-planning를 담당하는 파트입니다.
 
 ## Simulator 설치 방법
 1. Carla simulator [링크](./Carla_simulator)
