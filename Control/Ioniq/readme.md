@@ -47,12 +47,16 @@ ERP42와 마찬가지로 IONIQ의 PID 제어 코드는 ROS2로 짜여있다.
 5. 만약 current_speed와 desired_speed를 그래프로 나타내어 비교하고 싶은 경우, 다음 링크에서 pid_graph_0707.py를 다운 받고 실행시키면 된다. [링크](./pid_graph_ioniq)
 
 ### Ioniq 제어 유틸리티 설명
+1. 사용하는 주요 Topic에 대한 설명
 
 ![Screenshot from 2020-07-15 23-02-03](https://user-images.githubusercontent.com/59784459/87555065-e930e300-c6ef-11ea-911b-481603ca68a4.png)
+
+2. 사용하는 주요 Node에 대한 설명
 
 ![Screenshot from 2020-07-15 23-05-55](https://user-images.githubusercontent.com/59784459/87555071-ec2bd380-c6ef-11ea-84a8-07cd2c93a08b.png)
 
 ![Screenshot from 2020-07-15 23-06-10](https://user-images.githubusercontent.com/59784459/87555074-ed5d0080-c6ef-11ea-8b85-9d7bd937ed92.png)
 
+3. RQT
 ![Screenshot from 2020-07-15 23-06-23](https://user-images.githubusercontent.com/59784459/87555082-efbf5a80-c6ef-11ea-821c-384742312e84.png)
 
