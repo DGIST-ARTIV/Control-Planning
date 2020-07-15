@@ -7,6 +7,9 @@ Control_Planning 파트는 차량의 주행 경로 알고리즘(path-planning al
 2. IONIQ의 통신 방법과 제어 방법 [링크](./Control/Ioniq)
 3. Path_planning과 Simulator [링크](./Planning)
 
+## 개괄
+![슬라이드1](https://user-images.githubusercontent.com/59792475/87427806-4c514580-c61c-11ea-8115-62d565470eb7.JPG)
+
 ## 통합 제어기 초안
 통합 소프트웨어 팀과 논의를 통해 매개노드를 완성해 나갈 예정.  
 
