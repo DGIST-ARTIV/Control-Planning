@@ -15,7 +15,7 @@ dbw_ioniq_node와 dbw_cmd_node에 더 자세히 알고 싶다면? 다음 링크�
 **3. RQT**
 ![Screenshot from 2020-07-15 23-06-23](https://user-images.githubusercontent.com/59784459/87555082-efbf5a80-c6ef-11ea-821c-384742312e84.png)
 
-### Ioniq 제어 결과 설명
+## Ioniq 제어 결과 설명
 **1. P 제어기만 사용하였을 때**
 
 ![Screenshot from 2020-07-15 23-27-58](https://user-images.githubusercontent.com/59784459/87557751-45e1cd00-c6f3-11ea-92cc-d713fb63548a.png)
