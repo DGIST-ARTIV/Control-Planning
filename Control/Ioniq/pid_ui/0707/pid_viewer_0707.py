@@ -48,12 +48,10 @@ class MyWindow(QMainWindow, form_class):
         self.pushButton_2.clicked.connect(self.actReset)
         self.doubleSpinBox_2.editingFinished.connect(self.applyBtn)
 
-        self.kp = 1.25
-        self.ki = 0.75
+        self.kp = 14.5
+        self.ki = 0.25
         self.kd = 1
-        # self.desired_speed = 600
         self.desired_speed = 0
-        # self.Anti_windup_guard = 70
         self.Anti_windup_guard = 70
 
     def startDrive(self):
