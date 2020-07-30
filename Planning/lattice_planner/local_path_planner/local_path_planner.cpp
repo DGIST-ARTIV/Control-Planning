@@ -1,6 +1,10 @@
 #include <bits/stdc++.h>
 #include <ros/ros.h>
 #include "std_msgs/Float32MultiArray.h"
+#include "geometry_msgs/PoseStamped.h"
+
+//#include"matplotlib-cpp-master/matplotlibcpp.h"
+//namespace plt = matplotlibcpp;
 
 using namespace std;
 
@@ -23,7 +27,6 @@ struct State {
 	double v = 0.0;
 };
 bool check_map(double(*map)[500], double x, double y) {
-	cout << "check_map" << endl;
 	int xx = round(x * 10);
 	int yy = 250 - round(y * 10);
 	if (yy < 0 || yy>499 || xx < 0 || xx>499) return false;
@@ -37,11 +40,11 @@ double pi_2_pi(double angle) {
 }
 State update(State state, double v, double delta, double dt, double L) {
 	state.v = v;
-	state.x += state.v * cos(state.yaw) * dt;
+  state.x += state.v * cos(state.yaw) * dt;
 	state.y += state.v * sin(state.yaw) * dt;
 	state.yaw += state.v / L * tan(delta) * dt;
 	state.yaw = pi_2_pi(state.yaw);
-	return state;
+  return state;
 }
 void generate_trajectory(double s, double km, double kf, double k0, vector<double>& x, vector<double>& y, vector<double>& yaw, double v){
 	double n = s/ds;
@@ -77,7 +80,7 @@ void generate_trajectory(double s, double km, double kf, double k0, vector<doubl
 	}
 }
 double generate_trajectory_costmap(double s, double km, double kf, double k0, double (*map)[500], vector<double>& x, vector<double>& y, vector<double>& yaw, double v){
-	double n = s/ds;
+	double n = s/ds;//야 계산중 초기화가 안된값이 안들어 감
 	double time = s/v;
 	double cost = 0;
 	double tk[3] = {0.0, time/2.0, time};
@@ -96,7 +99,7 @@ double generate_trajectory_costmap(double s, double km, double kf, double k0, do
 	for(double t = 0.0; t<time; t += time/n){
 		kp.push_back( A*t*t + B*t + C );
 	}
-	int dt = time/n;
+	double dt = time/n;
 	State state;
 	x.push_back(state.x);
 	y.push_back(state.y);
@@ -119,6 +122,7 @@ double generate_trajectory_costmap(double s, double km, double kf, double k0, do
 	return cost;
 }
 double* generate_last_state(double s, double km, double kf, double k0, double v) {
+
 	double n = s / ds;
 	double time = s / v;
 	double cost = 0;
@@ -144,11 +148,13 @@ double* generate_last_state(double s, double km, double kf, double k0, double v)
 	x.push_back(state.x);
 	y.push_back(state.y);
 	yaw.push_back(state.yaw);
-	for (double ikp : kp) {
+
+  for (double ikp : kp) {
 		state = update(state, v, ikp, dt, L);
 		x.push_back(state.x);
 		y.push_back(state.y);
 		yaw.push_back(state.yaw);
+
 	}
 	double res[3];
 	res[0] = state.x;
@@ -165,26 +171,29 @@ vector<double> calc_diff2(State target, double x, double y, double yaw) {
 	return v;
 }
 void carc_j(State target, double* p, double* h, double k0, double(*j)[3],double v) {
-	cout << "carc_j" << endl;
 	double xp, xn;
 	double yp, yn;
 	double yawp, yawn;
 	vector<double> dn, dp;
 	double d1[3], d2[3], d3[3];
-	double* k;
+	double *k;
+
+
 	k = generate_last_state(p[0] + h[0], p[1], p[2], k0,v);
 	xp = k[0];
 	yp = k[1];
 	yawp = k[2];
 	dp = calc_diff2(target, xp, yp, yawp);
+  printf("dp : %lf %lf %lf\n", dp[0], dp[1],dp[2]);
 	k = generate_last_state(p[0] - h[0], p[1], p[2], k0,v);
 	xn = k[0];
 	yn = k[1];
 	yawn = k[2];
 	dn = calc_diff2(target, xn, yn, yawn);
+  printf("dn : %lf %lf %lf\n", dn[0], dn[1],dn[2]);
+
 	for (int i = 0; i < 3; i++) {
 		d1[i] = (dp[i] - dn[i]) / (2.0 * h[0]);
-
 	}
 	k = generate_last_state(p[0], p[1] + h[1], p[2], k0,v);
 	xp = k[0];
@@ -216,6 +225,7 @@ void carc_j(State target, double* p, double* h, double k0, double(*j)[3],double 
 		j[i][0] = d1[i];
 		j[i][1] = d2[i];
 		j[i][2] = d3[i];
+    printf("j %lf %lf %lf\n", d1[i], d2[i],d3[i]);
 	}
 	return;
 }
@@ -227,9 +237,7 @@ double selection_learning_param(double* dp, double* p, double k0, State target, 
 	double a[2] = { 1.0, 1.5 };
 	double tp[3];
 	double* b;
-	for (int i = 0; i < 3; i++) {
-		printf("SSS : %lf %lf : ", dp[i], p[i]);
-	}
+
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 3; j++) {
 			tp[j] = p[j] + a[j] * dp[j];
@@ -261,12 +269,10 @@ int f_inv(double(*a)[3], double(*inv)[3]) {
 			inv[j][i] = 1.0 / determinant *
 				(a[(i + 1) % 3][(j + 1) % 3] * a[(i + 2) % 3][(j + 2) % 3] - a[(i + 1) % 3][(j + 2) % 3] * a[(i + 2) % 3][(j + 1) % 3]);
 		}
-		printf("inv %lf %lf %lf\n", inv[i][0], inv[i][1], inv[i][2]);
 	}
 	return 0;
 }
 double optimize_trajectory_costmap(State target, double k0, double* p, double* xp, double* yp, double* yawp, double v, double (*map)[500]) {
-	cout << "optimize_trajectory_costmap" << endl;
 	for (int i = 0; i < max_iter; i++) {
 		vector<double> x;
 		vector<double> y;
@@ -274,7 +280,6 @@ double optimize_trajectory_costmap(State target, double k0, double* p, double* x
 		double cost = generate_trajectory_costmap(p[0], p[1], p[2], k0, map, x, y, yaw, v);
 		vector<double> dc;
 		dc = calc_diff2(target, x[x.size() - 1], y[y.size() - 1], yaw[yaw.size() - 1]);
-		printf("dc %lf %lf %lf\n", dc[0], dc[1], dc[2]);
 		double cost1 = sqrt(dc[0] * dc[0] + dc[1] * dc[1] + dc[2] * dc[2]);
 		if (cost1 <= cost_th) {
 			cout << "find_good_path!" << endl;
@@ -294,7 +299,10 @@ double optimize_trajectory_costmap(State target, double k0, double* p, double* x
 		int chekk;
 		try {
 			carc_j(target, p, h, k0, j,v);
-			chekk = f_inv(j, invJ);
+    			chekk = f_inv(j, invJ);
+      for(int i=0; i<3; i++){
+        printf("inv %lf %lf %lf\n", invJ[i][0],invJ[i][1],invJ[i][2]);
+      }
 			if (chekk) { throw chekk; }
 			for (int i = 0; i < 3; i++) {
 				dp[i] = -invJ[i][0] * dc[0] - invJ[i][1] * dc[1] - invJ[i][2] * dc[2];
@@ -312,16 +320,14 @@ double optimize_trajectory_costmap(State target, double k0, double* p, double* x
 		// it need to check return argument
 	}
 	*xp = 0;
-	cout << "can't find path in this state : " << target.x<<","<<target.y<<endl;
+	//cout << "can't find path in this state : " << target.x<<","<<target.y<<endl;
 	return 0;
 }
 int k_min(double a, double b) {
-	cout << "k_min" << endl;
 	if (a >= b) return int(b);
 	else return int(a);
 }
 int k_max(double a, double b) {
-	cout << "k_max" << endl;
 	if (a <= b) return int(b);
 	else return int(a);
 }
@@ -371,18 +377,17 @@ void line_on_map(double(*line)[3], double(*map)[500], int type = 0) {
 		}
 	}
 }
-/*
-void lidar_on_map(double (*lidar)[4], double(*map)[500], int type = 0) {
+
+void lidar_on_map(float (*lidar)[4], double(*map)[500], int type = 0) {
 	cout << "lidar_on_map" << endl;
 	int m0 = 1e9, M0 = -1;
 	int m1 = 1e9, M1 = -1;
 	for (int i = 0; i < 4; i++) {
-		m0 = min(m0, lidar[0][i]);
-		m1 = min(m1, lidar[1][i]);
-		M0 = max(M0, lidar[0][i]);
-		M1 = max(M1, lidar[1][i]);
+		m0 = min(m0, int(lidar[0][i]));
+		m1 = min(m1, int(lidar[1][i]));
+		M0 = max(M0, int(lidar[0][i]));
+		M1 = max(M1, int(lidar[1][i]));
 	}
-
 	for (int i = max(m0 - 5,0) ; i <= min(M0 + 5, 499); i++) {
 		for (int j = min(m1+5, 250) ; j <= max(M1-5,-249); j++) {// 여기 수정 필요함 미리 배열 좌표로 변환할지 생각해보기!
 			int y = 250 - j;
@@ -391,11 +396,10 @@ void lidar_on_map(double (*lidar)[4], double(*map)[500], int type = 0) {
 		}
 	}
 }
-*/
+
 vector< vector<double> > get_lookup_table() {
 	FILE* fpi;
 	fpi = fopen("/home/vision/rs1_ws/src/local_path_planner/src/lookuptable.csv", "r");
-	cout<<"check"<<endl;
 	vector< vector<double> > res;
 	char tmp[300];
 	int cnt = 1;
@@ -403,7 +407,6 @@ vector< vector<double> > get_lookup_table() {
 		if (feof(fpi)) break;
 		fscanf(fpi, "%s", tmp);
 	}
-	cout<<cnt<<endl;
 
 	while (1) {
 		cnt++;
@@ -420,7 +423,6 @@ vector< vector<double> > get_lookup_table() {
 		t.push_back(kf);
 		res.push_back(t);
 	}
-	cout << cnt << endl;
 	fclose(fpi);
 	return res;
 }
@@ -430,19 +432,23 @@ vector<double> search_nearest_one_from_lookuptable(double tx, double ty, double 
 	int first = 0;
 	int k = lookup_table.size();
 	int last = k;
-	/*for (int i = k - 1; i >= 0; i--) {
-		double dv = round(v);
-		if (dv == lookup_table[i][0]) {
-			last == i + 1;
+  double dv = double(round(v));
+	for (int i = k - 1; i >= 0; i--) {
+    cout<<lookup_table[i][0]<<endl;
+		if (lookup_table[i][0] ==dv) {
+      cout<<"check"<<endl;
+			last = i + 1;
 			for (int j = i; j >= 0; j--) {
 				if (lookup_table[j][0] == dv - 1) {
+          cout<<"check"<<endl;
 					first = j;
+          break;
 				}
 			}
 		}
-		break;
-	}*/
-	printf("first last : %d %d", first, last);
+    break;
+	}
+	printf("first last : %d %d %lf\n", first, last, dv);
 	for (int i = first; i < last - 1; i++) {
 		double dx = tx - lookup_table[i][1];
 		double dy = ty - lookup_table[i][2];
@@ -453,7 +459,7 @@ vector<double> search_nearest_one_from_lookuptable(double tx, double ty, double 
 			mind = d;
 		}
 	}
-	cout << minid << endl;
+  cout<<"minid : "<<minid<<endl;
 	return lookup_table[minid];
 }
 vector< vector<double> > generate_path_costmap(vector< vector<double> >& target_states, double k0, double v, double (*map)[500],vector< vector<double> > &lookup_table) {
@@ -493,33 +499,73 @@ vector< vector<double> > generate_path_costmap(vector< vector<double> >& target_
 	return result;
 }
 vector< vector<double> > calc_lane_states(double l_center, double l_heading, double l_width, double d, double v) {
-	cout << "calc_lane_states" << endl;
-	double dx = sin(l_heading) * l_width/10;
-	double dy = cos(l_heading) * l_width/10;
+	double dx = sin(l_heading) * l_width/20;
+	double dy = cos(l_heading) * l_width/20;
 	double y0 = l_center;
 	double x0 = d;
 	double yawf = l_heading;
 	vector< vector<double> > states;
-	for (int i = 0; i < 9; i++) {
+  vector<double> x;
+  vector<double> y;
+	for (int i = 0; i < 19; i++) {
 		double xf = x0 + (4-i)*dx;
 		double yf = y0 - (4-i)*dy;
 		vector<double> t;
 		t.push_back(v);
 		t.push_back(xf);
+    x.push_back(xf);
+    y.push_back(yf);
 		t.push_back(yf);
 		t.push_back(yawf);
 		states.push_back(t);
 	}
+  //plt::plot(x,y,"-g");
+  //plt::show();
 	return states;
 }
+void lane_state_sampling_test1(){
+		cout<<"lane_state_sampling_test1"<<endl;
+			clock_t start= clock();
+    double k0 = 0;
+    double l_center = 0.0;
+    double l_heading = 0.0;
+    double l_width = 10.0;
+    double v_width = 1.16;
+    double d0 = 10;
+    vector< vector <double> > lookup_table = get_lookup_table();
+		double v=10;
+    double local_map[500][500];
+    for(int i=0; i<500; i++){
+      for(int j=0; j<500; j++)  local_map[j][i]=0;
+    }
+    vector< vector<double> > states = calc_lane_states(l_center, l_heading, l_width,  d0, v);
+    vector< vector<double> > result = generate_path_costmap(states, k0, v, local_map, lookup_table);
+		double mind = 1e9;
+		printf("result size : %ld\n", result.size());
+    for(int i=0;i<result.size();i++){
+    		vector<double> table = result[i];
+				vector<double> x;
+				vector<double> y;
+				vector<double> yaw;
+        generate_trajectory(table[3],table[4],table[5],k0,x,y,yaw,v/3.6);
+        //plt::plot(x,y,"-r");
+				printf("\n");
+    }
+		clock_t end= clock();
+		printf("calc time: %lf\n",double(end-start)/CLOCKS_PER_SEC);
+		//plt::show(0.01);
+}
+
 class Planning {
 public:
 	ros::Subscriber state_sub;
 	ros::Subscriber destination_sub;
+  ros::Subscriber location_sub;
+  ros::Subscriber lidal_sub;
 
-
-	double v{0}, steer{0};
-	double xc, yc;
+	double v{5}, steer{0};
+	double x_current = 0;
+  double y_current = 0;
 	vector< vector<double> > lookup_table;
 	double xd[3], yd[3];
 	vector< vector < float> >  lidar;
@@ -531,29 +577,29 @@ public:
 	}
 
 	Planning(ros::NodeHandle * nodeHandle){
-		cout<<"planning"<<endl;
 		lookup_table = get_lookup_table();
-		cout<<"planning"<<endl;
 		reset_map(local_map);
 		ros::NodeHandle nh(*nodeHandle);
-				cout<<"planning"<<endl;
 		x_pub = nh.advertise<std_msgs::Float32MultiArray>("/local_path/x", 1);
 		y_pub = nh.advertise<std_msgs::Float32MultiArray>("/local_path/y", 1);
 
-		state_sub = nh.subscribe("Ioniq_info", 1, &Planning::state_callback, this);
-		/*ros::Subscriber lidal_sub = nh.Subscribe("/", 1, lidar_callback);
-		ros::Subscriber line_sub = nh.Subscribe("/", 1, line_callback);
-		ros::Subscriber location_sub = nh.Subscribe("/", 1, location_callback);*/
-		destination_sub = nh.subscribe("destination_info",1,&Planning::destination_callback, this);
+		state_sub = nh.subscribe("/Ioniq_info", 1, &Planning::state_callback, this);
+	  //lidal_sub = nh.subscribe("/objects_array", 0, &Planning::lidar_obstracle_callback, this);
+		//ros::Subscriber line_sub = nh.subscribe("/", 1, line_callback);
+		location_sub = nh.subscribe("/utm_fix", 1, &Planning::location_callback, this);
+		destination_sub = nh.subscribe("/destination_info",1,&Planning::destination_callback, this);
 	}
 
 	void state_callback(const std_msgs::Float32MultiArray::ConstPtr& msg){
-		cout<<"state_callback!!!"<<endl;
-		v = msg->data[3];
-		steer = msg->data[0];
+	//	cout<<"state_callback!!!"<<endl;
+		v = msg->data[23];
+		steer = msg->data[3];
+
+    cout<<v<<", "<<steer<<endl;
 	}
-	/*void lidar_obstracle_callback(const std_msgs::msg::Float32MultiArray& msg) {
-		int size = sizeof(msg->data);
+	void lidar_obstracle_callback(const std_msgs::Float32MultiArray& msg) {
+		int size = sizeof(msg.data);
+    cout<<"get lidar, size : "<<size<<endl;
 		if (size % 8 != 0) {
 			cout << "Warning lidar data check data!!!!!!!!!!!!" << endl;
 			return;
@@ -562,20 +608,35 @@ public:
 		int k = int(size / 8);
 		for (int i = 0; i < k; i++) {
 			for (int j = 0; j < 4; j += 1) {
-				l[0][j] = msg->data[i * 8 + j * 2]*10;
-				l[1][j] = msg->data[i * 8 + j * 2 + 1]*10;
+				l[0][j] = msg.data[i * 8 + j * 2]*10;
+				l[1][j] = msg.data[i * 8 + j * 2 + 1]*10;
+        printf("%f %f ", l[0][j], l[1][j]);
 			}
+      cout<<endl;
 			lidar_on_map(l, local_map);
 		}
+    for(int i=0;i<500; i++){
+      for(int j=0; j<500; j++){
+        printf("%lf ", local_map[j][i]);
+      }
+      printf("\n");
+    }
+    printf("\n\n\n");
 	}
-	void location_callback(const std_msgs::msg::NavSatFix::SharedPtr msg)	{
-
-	}*/
+	void location_callback(const geometry_msgs::PoseStamped::ConstPtr& msg)	{
+    cout<<"get current location"<<endl;
+    x_current = msg->pose.position.x;
+    y_current = msg->pose.position.y;
+    cout<<x_current<<","<<y_current<<endl;
+	}
 	void destination_callback(const std_msgs::Float32MultiArray& msg)	{
+    cout<<"make path"<<endl;
 		float d[2][2];
-		for (int i=0;1;i++){
-			break;
-		}
+
+    d[0][0] = 100;
+    d[0][1] = 0;
+    d[1][0] = 200;
+    d[1][1] = 50;
 		std_msgs::Float32MultiArray x;
 		std_msgs::Float32MultiArray y;
 		double det = d[0][0]*d[0][0]*d[1][0]-d[0][0]*d[1][0]*d[1][0];
@@ -589,7 +650,7 @@ public:
 		double l_heading = atan(2*A*10+B);
 		double l_width = 10.0;
 		double v_width = 1.16;
-		double d0 = 10;
+		double d0 = 20;
 		int nxy = 10;
 		double cost=0;
 		// this need to ask, can private variable use in private function?? can!!!
@@ -598,6 +659,13 @@ public:
 		double mind = 1e9;
 		vector <double> vm;
 		printf("result size : %ld\n", result.size());
+    if(result.size()==0){
+      cout<<"no path generated"<<endl;
+      x.data.push_back(1);
+      x_pub.publish(x);
+      return;
+
+    }
 		for (int i = 0; i < result.size(); i++) {
 			vector<double> table = result[i];
 			double d = sqrt(table[0]*table[0]+table[1]*table[1]) + con * table[6];
@@ -627,5 +695,6 @@ int main(int argc, char* argv[]) {
 	ros::NodeHandle nh;
 	Planning plan(&nh);
 	ros::spin();
+//  lane_state_sampling_test1();
 	return 0;
 }
