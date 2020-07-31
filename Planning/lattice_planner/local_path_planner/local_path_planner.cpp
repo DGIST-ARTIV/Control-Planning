@@ -2,6 +2,7 @@
 #include <ros/ros.h>
 #include "std_msgs/Float32MultiArray.h"
 #include "geometry_msgs/PoseStamped.h"
+#include <tracking_msg/TrackingObjectArray.h>
 
 //#include"matplotlib-cpp-master/matplotlibcpp.h"
 //namespace plt = matplotlibcpp;
@@ -19,7 +20,6 @@ double mapk[500][500];
  double PI = acos(-1);
 ros::Publisher x_pub;
 ros::Publisher y_pub;
-
 struct State {
 	double x = 0.0;
 	double y = 0.0;
@@ -377,7 +377,6 @@ void line_on_map(double(*line)[3], double(*map)[500], int type = 0) {
 		}
 	}
 }
-
 void lidar_on_map(float (*lidar)[4], double(*map)[500], int type = 0) {
 	cout << "lidar_on_map" << endl;
 	int m0 = 1e9, M0 = -1;
@@ -396,7 +395,6 @@ void lidar_on_map(float (*lidar)[4], double(*map)[500], int type = 0) {
 		}
 	}
 }
-
 vector< vector<double> > get_lookup_table() {
 	FILE* fpi;
 	fpi = fopen("/home/vision/rs1_ws/src/local_path_planner/src/lookuptable.csv", "r");
@@ -555,7 +553,6 @@ void lane_state_sampling_test1(){
 		printf("calc time: %lf\n",double(end-start)/CLOCKS_PER_SEC);
 		//plt::show(0.01);
 }
-
 class Planning {
 public:
 	ros::Subscriber state_sub;
@@ -584,7 +581,7 @@ public:
 		y_pub = nh.advertise<std_msgs::Float32MultiArray>("/local_path/y", 1);
 
 		state_sub = nh.subscribe("/Ioniq_info", 1, &Planning::state_callback, this);
-	  //lidal_sub = nh.subscribe("/objects_array", 0, &Planning::lidar_obstracle_callback, this);
+	  lidal_sub = nh.subscribe("/tracking/tracking_objects", 0, &Planning::lidar_obstracle_callback, this);
 		//ros::Subscriber line_sub = nh.subscribe("/", 1, line_callback);
 		location_sub = nh.subscribe("/utm_fix", 1, &Planning::location_callback, this);
 		destination_sub = nh.subscribe("/destination_info",1,&Planning::destination_callback, this);
@@ -597,32 +594,22 @@ public:
 
     cout<<v<<", "<<steer<<endl;
 	}
-	void lidar_obstracle_callback(const std_msgs::Float32MultiArray& msg) {
-		int size = sizeof(msg.data);
+/*	void lidar_obstracle_callback(const tracking_msg::TrackingObjectArray& msg) {
+		int size = msg.size;
     cout<<"get lidar, size : "<<size<<endl;
-		if (size % 8 != 0) {
-			cout << "Warning lidar data check data!!!!!!!!!!!!" << endl;
-			return;
-		}
+		cout<<"size:"<<sizeof(msg.array[0].bev.data)<<endl;
+
 		float l[2][4];
-		int k = int(size / 8);
-		for (int i = 0; i < k; i++) {
+		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < 4; j += 1) {
-				l[0][j] = msg.data[i * 8 + j * 2]*10;
-				l[1][j] = msg.data[i * 8 + j * 2 + 1]*10;
+				l[0][j] = msg.array[i].bev.data[j * 2]*10;
+				l[1][j] = msg.array[i].bev.data[j * 2 + 1]*10;
         printf("%f %f ", l[0][j], l[1][j]);
 			}
       cout<<endl;
 			lidar_on_map(l, local_map);
 		}
-    for(int i=0;i<500; i++){
-      for(int j=0; j<500; j++){
-        printf("%lf ", local_map[j][i]);
-      }
-      printf("\n");
-    }
-    printf("\n\n\n");
-	}
+	}*/
 	void location_callback(const geometry_msgs::PoseStamped::ConstPtr& msg)	{
     cout<<"get current location"<<endl;
     x_current = msg->pose.position.x;
@@ -687,8 +674,6 @@ public:
 		y_pub.publish(y);
  }
 };
-
-
 int main(int argc, char* argv[]) {
 	cout<<"main"<<endl;
 	ros::init(argc, argv, "local_path_planner");
