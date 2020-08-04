@@ -3,7 +3,8 @@
 #include "std_msgs/Float32MultiArray.h"
 #include "geometry_msgs/PoseStamped.h"
 #include <tracking_msg/TrackingObjectArray.h>
-
+#include <visualization_msgs/MarkerArray.h>
+#include <visualization_msgs/Marker.h>
 //#include"matplotlib-cpp-master/matplotlibcpp.h"
 //namespace plt = matplotlibcpp;
 
@@ -20,6 +21,9 @@ double mapk[500][500];
  double PI = acos(-1);
 ros::Publisher x_pub;
 ros::Publisher y_pub;
+ros::Publisher path_pub;
+ros::Publisher line_pub;
+ros::Publisher des_pub;
 
 struct State {
 	double x = 0.0;
@@ -78,6 +82,7 @@ void generate_trajectory(double s, double km, double kf, double k0, vector<doubl
 		x.push_back(state.x);
 		y.push_back(state.y);
 		yaw.push_back(state.yaw);
+
 	}
 }
 double generate_trajectory_costmap(double s, double km, double kf, double k0, double (*map)[500], vector<double>& x, vector<double>& y, vector<double>& yaw, double v){
@@ -278,13 +283,13 @@ double optimize_trajectory_costmap(State target, double k0, double* p, double* x
 		vector<double> x;
 		vector<double> y;
 		vector<double> yaw;
-    printf("o_check : %d\n", i);
+    //printf("o_check : %d\n", i);
 		double cost = generate_trajectory_costmap(p[0], p[1], p[2], k0, map, x, y, yaw, v);
 		vector<double> dc;
 		dc = calc_diff2(target, x[x.size() - 1], y[y.size() - 1], yaw[yaw.size() - 1]);
 		double cost1 = sqrt(dc[0] * dc[0] + dc[1] * dc[1] + dc[2] * dc[2]);
 		if (cost1 <= cost_th) {
-			cout << "find_good_path!" << endl;
+			//cout << "find_good_path!" << endl;
 			if(cost==11111){
 				*xp=0;
 				cout<<"generated path on obstracle or line, but don't worry I will find anouther path : "<<target.x<<","<< target.y <<endl;
@@ -312,7 +317,7 @@ double optimize_trajectory_costmap(State target, double k0, double* p, double* x
 		}
 		catch (int a) {
 			*xp = 0;
-			cout << "cannot calc path LinAlgError : " << target.x<<","<<target.y<<endl;
+			cout << "cannot calc path LinAlgError : " << k0<<","<<v<<endl;
 			return 0;
 		}
 		double alpha = selection_learning_param(dpp, p, k0, target, v);
@@ -446,7 +451,7 @@ vector<double> search_nearest_one_from_lookuptable(double tx, double ty, double 
 		}
     break;
 	}
-	printf("first last : %d %d %lf\n", first, last, dv);
+//	printf("first last : %d %d %lf\n", first, last, dv);
 	for (int i = first; i < last - 1; i++) {
 		double dx = tx - lookup_table[i][1];
 		double dy = ty - lookup_table[i][2];
@@ -457,7 +462,7 @@ vector<double> search_nearest_one_from_lookuptable(double tx, double ty, double 
 			mind = d;
 		}
 	}
-  cout<<"minid : "<<minid<<endl;
+  //cout<<"minid : "<<minid<<endl;
 	return lookup_table[minid];
 }
 vector< vector<double> > generate_path_costmap(vector< vector<double> >& target_states, double k0, double v, double (*map)[500],vector< vector<double> > &lookup_table) {
@@ -481,7 +486,7 @@ vector< vector<double> > generate_path_costmap(vector< vector<double> >& target_
 		double p[3];
 		cost = optimize_trajectory_costmap(target, k0, init_p, &x, &y, &yaw, v/3.6, map);// km/h -> m/s check!!
 		if (x) {
-				cout << "`find_good_path`" << endl;
+			//	cout << "`find_good_path`" << endl;
 			vector<double> t;
 			t.push_back(x);
 			t.push_back(y);
@@ -504,10 +509,32 @@ vector< vector<double> > calc_lane_states(double l_center, double l_heading, dou
 	vector< vector<double> > states;
   vector<double> x;
   vector<double> y;
-	for (int i = 0; i < 9; i++) {
-		double xf = x0 + (4-i)*dx;
-		double yf = y0 - (4-i)*dy;
+  visualization_msgs::MarkerArray line;
+  line.markers.resize(19);
+	for (int i = 0; i < 19; i++) {
+		double xf = x0 + (4.5-i*0.5)*dx;
+		double yf = y0 - (4.5-i*0.5)*dy;
 		vector<double> t;
+
+    line.markers[i].header.frame_id = "/my_frame";
+    line.markers[i].header.stamp = ros::Time();
+    line.markers[i].id = i;
+    line.markers[i].type = visualization_msgs::Marker::ARROW;
+    line.markers[i].action = visualization_msgs::Marker::ADD;
+    line.markers[i].pose.position.x = xf;
+    line.markers[i].pose.position.y = yf;
+    line.markers[i].pose.position.z = 0;
+    line.markers[i].pose.orientation.x = 0.0;
+    line.markers[i].pose.orientation.y = 0.0;
+    line.markers[i].pose.orientation.z = yawf;
+    line.markers[i].pose.orientation.w = 1.0;
+    line.markers[i].scale.x = 1;
+    line.markers[i].scale.y = 0.1;
+    line.markers[i].scale.z = 0.1;
+    line.markers[i].color.a = 1.0;
+    line.markers[i].color.r = 1.0f;
+    line.markers[i].color.g = 1.0f;
+    line.markers[i].color.b = 1.0f;
 		t.push_back(v);
 		t.push_back(xf);
     x.push_back(xf);
@@ -516,6 +543,7 @@ vector< vector<double> > calc_lane_states(double l_center, double l_heading, dou
 		t.push_back(yawf);
 		states.push_back(t);
 	}
+  line_pub.publish(line);
   //plt::plot(x,y,"-g");
   //plt::show();
 	return states;
@@ -558,7 +586,6 @@ public:
 	ros::Subscriber destination_sub;
   ros::Subscriber location_sub;
   ros::Subscriber lidal_sub;
-  ros::Publisher marker_pub
 	double v{5}, steer{0};
 	double x_current = 0;
   double y_current = 0;
@@ -578,7 +605,11 @@ public:
 		ros::NodeHandle nh(*nodeHandle);
 		x_pub = nh.advertise<std_msgs::Float32MultiArray>("/local_path/x", 1);
 		y_pub = nh.advertise<std_msgs::Float32MultiArray>("/local_path/y", 1);
-    marker_pub = n.advertise<visualization_msgs::Marker>("visualization_marker", 10);
+    path_pub = nh.advertise<visualization_msgs::MarkerArray>("path", 1);
+    line_pub = nh.advertise<visualization_msgs::MarkerArray>("line", 1);
+    des_pub = nh.advertise<visualization_msgs::Marker>("des", 1);
+
+
 
 		state_sub = nh.subscribe("/Ioniq_info", 1, &Planning::state_callback, this);
 	 // lidal_sub = nh.subscribe("/tracking/tracking_objects", 0, &Planning::lidar_obstracle_callback, this);
@@ -592,7 +623,7 @@ public:
 		v = msg->data[23];
 		steer = msg->data[3];
 
-    //cout<<v<<", "<<steer<<endl;
+    //cout<<"!!!!!!!!!!!!!!!!!!"<<v<<", "<<steer<<endl;
 	}
 /*	void lidar_obstracle_callback(const tracking_msg::TrackingObjectArray& msg) {
 		int size = msg.size;
@@ -617,7 +648,7 @@ public:
     //cout<<x_current<<","<<y_current<<endl;
 	}
 	void destination_callback(const std_msgs::Float32MultiArray& msg)	{
-    cout<<"make path"<<endl;
+    //cout<<"make path"<<endl;
     clock_t start = clock();
 		float d[2][2];
     int cnt = 0;
@@ -633,6 +664,12 @@ public:
         cnt++;
       }
     }//need to update more accurate*/
+    d[0][0] = 20;
+    d[0][1] = 0;
+    d[1][0] = 40;
+    d[1][1] = 0;
+    visualization_msgs::MarkerArray path;
+
 
 		std_msgs::Float32MultiArray x;
 		std_msgs::Float32MultiArray y;
@@ -655,37 +692,86 @@ public:
 		vector< vector<double> > result = generate_path_costmap(states, k0,v, local_map, lookup_table);
 		double mind = 1e9;
 		vector <double> vm;
+
 		printf("result size : %ld\n", result.size());
     if(result.size()==0){
       cout<<"no path generated"<<endl;
       x.data.push_back(1);
       x_pub.publish(x);
       return;
-
     }
+    double des_x = 21;
+    double des_y = A*441 + B*21;
+    cout<<des_x<<" , "<<des_y<<endl;
 		for (int i = 0; i < result.size(); i++) {
 			vector<double> table = result[i];
-			double d = sqrt(table[0]*table[0]+table[1]*table[1]) + con * table[6];
-			if(d<mind){
-				mind = d;
+			double k = sqrt((table[0]-des_x)*(table[0]-des_x)+(table[1]-des_y)*(table[1]-des_y));
+			if(k<mind){
+				mind = k;
 				vm = table;
 			}
 		}
-		vector<double> xt;
+    vector<double> xt;
 		vector<double> yt;
 		vector<double> yawt;
+    visualization_msgs::Marker dest;
+
 		generate_trajectory(vm[3], vm[4], vm[5], k0,xt,yt,yawt,v/3.6);
+    dest.header.frame_id = "/my_frame";
+    dest.header.stamp = ros::Time();
+    dest.id = 1;
+    dest.ns = "basic_shapes";
+    dest.type = visualization_msgs::Marker::ARROW;
+    dest.action = visualization_msgs::Marker::ADD;
+    dest.pose.position.x = des_x;
+    dest.pose.position.y = des_y;
+    dest.pose.position.z = 1;
+    dest.pose.orientation.x = 0;
+    dest.pose.orientation.y = 0;
+    dest.pose.orientation.z = l_heading;
+    dest.pose.orientation.w = 1.0;
+    dest.scale.x = 1;
+    dest.scale.y = 0.1;
+    dest.scale.z = 0.1;
+    dest.color.a = 1.0;
+    dest.color.r = 1.0f;
+    dest.color.g = 0.0f;
+    dest.color.b = 0.0f;
+    des_pub.publish(dest);
+    //cout<<xt.size()<<endl;
+    path.markers.resize(xt.size());
 		for(int i=0; i<xt.size(); i++){
+     path.markers[i].header.frame_id = "/my_frame";
+     path.markers[i].header.stamp = ros::Time();
+     path.markers[i].id = i;
+     path.markers[i].type = visualization_msgs::Marker::ARROW;
+     path.markers[i].action = visualization_msgs::Marker::ADD;
+     path.markers[i].pose.position.x = xt[i];
+     path.markers[i].pose.position.y = yt[i];
+     path.markers[i].pose.position.z = 0;
+     path.markers[i].pose.orientation.x = 0.0;
+     path.markers[i].pose.orientation.y = 0.0;
+     path.markers[i].pose.orientation.z = yawt[i];
+     path.markers[i].pose.orientation.w = 1.0;
+     path.markers[i].scale.x = 1;
+     path.markers[i].scale.y = 0.1;
+     path.markers[i].scale.z = 0.1;
+     path.markers[i].color.a = 1.0;
+     path.markers[i].color.r = 1.0f;
+     path.markers[i].color.g = 0.0f;
+     path.markers[i].color.b = 0.0f;
 			x.data.push_back(xt[i]);
 			y.data.push_back(yt[i]);
-		}*/
+		}
     /*plt::plot(x,y,"-r");
     plt::show(0.01);*/
 		reset_map(local_map);
     clock_t end =clock();
-    printf("\n\n !!!!!!! : %lf \n\n", (double)(end-start)/CLOCKS_PER_SEC);
-		x_pub.publish(x);
+    path_pub.publish(path);
+    x_pub.publish(x);
 		y_pub.publish(y);
+    printf("\n\n frame: %lf \n\n", 1/((double)(end-start)/CLOCKS_PER_SEC));
+
  }
 };
 
