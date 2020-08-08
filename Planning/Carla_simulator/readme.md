@@ -43,7 +43,7 @@ cd ros-bridge
 git submodule update --init
 cd ../catkin_ws/src
 ln -s ../../ros-bridge
-source /opt/ros/kinetic/setup.bash #Watch out, this sets ROS Kinetic. 
+source /opt/ros/melodic/setup.bash  
 cd ..
 
 #install required ros-dependencies
