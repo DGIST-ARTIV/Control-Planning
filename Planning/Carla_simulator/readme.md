@@ -87,3 +87,4 @@ roslaunch carla_ros_bridge carla_ros_brige_local_server.launch
 3번 명령을 실행하면 자동으로 pygame이 실행되면서 자동차를 운전할 수 있다!
 online server를 활용하여 carla를 실행할 수 있다. 
 이미 carla를 설치한 경우, local server를 통해 접속할 수 있다. 
+
