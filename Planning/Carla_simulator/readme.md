@@ -76,5 +76,14 @@ roslaunch carla_ros_bridge carla_ros_bridge_with_rviz.launch
 
 # Option 3: start the ros bridge together with an example ego vehicle
 roslaunch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch
+
+# Option 4: start the ros bridge and Artiv Master(Enbin Server)
+roslaunch carla_ros_bridge carla_ros_bridge_online_server.launch
+
+# Option 5: start the ros brige and Artiv Master(Local Server)
+roslaunch carla_ros_bridge carla_ros_brige_local_server.launch
+
 ```
 3번 명령을 실행하면 자동으로 pygame이 실행되면서 자동차를 운전할 수 있다!
+online server를 활용하여 carla를 실행할 수 있다. 
+이미 carla를 설치한 경우, local server를 통해 접속할 수 있다. 
