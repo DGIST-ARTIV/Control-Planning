@@ -14,14 +14,16 @@ Carla는 서버에서 World를 만들고 Client가 서버에 접속하는 방식
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 92635A407F7A020C
 sudo add-apt-repository "deb [arch=amd64 trusted=yes] http://dist.carla.org/carla-0.9.9/ all main"
 ```
-Calra가 /opt폴더에 설치되었는지 확인!!
+
 ```
 sudo apt-get update
 sudo apt-get install carla-simulator
 cd /opt/carla-simulator
 ```
+Calra가 /opt폴더에 설치되었는지 확인!!
 Carla설치가 완료되었다!
 ```
+cd bin
 ./CarlaUE4.sh
 ```
 Carla가 실행되는지 확인하고 wasd키를 이용해 세계를 돌아다녀 보자
