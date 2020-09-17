@@ -89,3 +89,5 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib
 ~~~
 앞으로도 다음과 같은 오류가 떴을 때는 library path에 directory가 추가되었는지 확인!!
+
+
