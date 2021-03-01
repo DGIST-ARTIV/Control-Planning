@@ -1,0 +1,14 @@
+<launch>
+    <node name="lane_driving" pkg="lane_driving" type="lane_driving" output="screen" respawn="true">
+        <param name="Kp_value" value="0.95" />
+        <param name="Ki_value" value="0.01" />
+        <param name="Kd_value" value="0.03" />
+        <param name="Kp_value_" value="2.7" />
+        <param name="Ki_value_" value="0.13" />
+        <param name="Kd_value_" value="0.03" />
+
+        <param name="desire_vel" value="45" />
+        <param name="min_filter" value="0.08" />
+    </node>
+    <node name="hlk_switch" pkg="lane_driving" type="hlk_switch" output="screen" respawn="true"/>
+</launch>

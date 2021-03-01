@@ -1,0 +1,31 @@
+<launch>
+  <arg name="kp" default="70"/>
+  <arg name="ki" default="10"/>
+  <arg name="kd" default="1"/>
+  <arg name="aw" default="60"/>
+
+  <arg name="upper_threathold" default="50"/>
+  <arg name="lower_threathold" default="-10"/>
+  <arg name="brake_scale" default="25"/>
+  
+  <arg name="hz" default="100"/>
+
+  <arg name="max_speed" default="100"/>
+  <arg name="speed_buffer" default="5"/>
+
+  <node pkg="movecar" type="movecar" name="movecar" output="screen">
+    <param name="kp" value="$(arg kp)"/>
+    <param name="ki" value="$(arg ki)"/>
+    <param name="kd" value="$(arg kd)"/>
+    <param name="aw" value="$(arg aw)"/>
+
+    <param name="upper_threathold" value='$(arg upper_threathold)'/>
+    <param name="lower_threathold" value="$(arg lower_threathold)"/>
+    <param name="brake_scale" value="$(arg brake_scale)"/>
+    
+    <param name='hz' value='$(arg hz)'/>
+    
+    <param name="max_speed" value="$(arg max_speed)"/>
+    <param name="speed_buffer" value="$(arg speed_buffer)"/>
+  </node>
+</launch>

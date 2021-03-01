@@ -32,7 +32,7 @@ class publisher:
 
     def get_global_path(self):
         # name =raw_input("input carla path :")
-        name = "E6_path1.csv"
+        name = "E6_path1.csv" #Input record path(by path_recorder.py
         with open(name, "r") as f:
             reader = csv.reader(f, delimiter = ',')
             for rows in reader:
