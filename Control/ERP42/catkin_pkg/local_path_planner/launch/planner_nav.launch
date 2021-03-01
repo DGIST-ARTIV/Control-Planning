@@ -1,0 +1,36 @@
+<!-- version 0.0.0 -->
+<launch>
+  <!-- tracking configuration -->
+  <arg name ='velocity' default = "15.0" />
+  <arg name ='Kp_alpha' default = "13.0"/>
+  <arg name ='Kp_beta' default = "-3.0"/>
+  <arg name ='dt' default = "0.1"/>
+  <!-- car and path planner setting -->
+  <arg name ="car_type" default = "1"/>
+  <arg name ="cmd_type" default = "1"/>
+  <arg name ="distance" default = "4"/>
+  <arg name ="line_length" default ="1"/>
+  <arg name ="warning_threshold" default = "10"/>
+  <arg name ="lookup_table_path" default="$(find local_path_planner)/src/lookuptable.csv"/>
+  <arg name ="obstacle_size" default = "10"/>
+  <arg name ="obstacle_range" default= "10"/>
+  <arg name ="obstacle_set" default = "0"/>
+  <arg name ="debug_path" default = "1"/>
+
+  <node pkg="local_path_planner" type = "local_path_planner_movecar_navpilot" name="nav_pilot" output = "screen">
+    <param name = 'velocity' type="double" value='$(arg velocity)'/>
+    <param name = 'Kp_alpha' type="double" value='$(arg Kp_alpha)'/>
+    <param name = 'Kp_beta' type="double" value='$(arg Kp_beta)'/>
+    <param name = 'dt' type="double" value = '$(arg dt)'/>
+    <param name = 'distance' type="double" value = '$(arg distance)'/>
+    <param name = 'line_length' value = '$(arg line_length)'/>
+    <param name = 'car_type' type="int" value = '$(arg car_type)'/>
+    <param name = 'cmd_type' type="int" value = "$(arg cmd_type)"/>
+    <param name = "warning_threshold" type="int" value ="$(arg warning_threshold)"/>
+    <param name = "lookup_table_path" value = "$(arg lookup_table_path)"/>
+    <param name ="obstacle_size" value = "$(arg obstacle_size)"/>
+    <param name = "obstacle_range" value = "$(arg obstacle_range)"/>
+    <param name = "obstacle_set" value = "$(arg obstacle_set)"/>
+    <param name = "debug_path" value = "$(arg debug_path)"/>
+  </node>
+</launch>

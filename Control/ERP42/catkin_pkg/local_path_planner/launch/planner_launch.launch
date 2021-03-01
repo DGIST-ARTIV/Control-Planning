@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="local_path_planner" type = "local_path_planner_node" name="local_path_planner" output = "screen"/>
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find local_path_planner)/config/local_path_planner.rviz"/>
+</launch>

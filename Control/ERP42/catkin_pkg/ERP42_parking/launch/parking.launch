@@ -1,0 +1,34 @@
+<!-- version 0.0.0 -->
+<launch>
+  <!-- tracking configuration -->
+  <arg name ='velocity' default = "10" />
+  <arg name ='Kp_alpha' default = "8.0"/>
+  <arg name ='Kp_beta' default = "-3.0"/>
+  <arg name ='dt' default = "0.1"/>
+
+  <arg name ="cmd_type" default = "1"/>
+  <arg name ="distance" default = "2"/>
+  <arg name ="parking_path" default="$(find ERP42_parking)/path/parking5-1.csv"/>
+  <arg name ="debuging" default = "1"/>
+  <arg name ="stop_time" default = "10"/>
+  <arg name ="back_time" default = "6"/>
+  <arg name ="back_speed" default = "5.5"/>
+  <arg name ="curve_time" default = "0"/>
+  <arg name ="curve_speed" default = "6"/>
+
+  <node pkg="ERP42_parking" type = "parking" name="parking" output = "screen">
+    <param name = 'velocity' type="double" value='$(arg velocity)'/>
+    <param name = 'Kp_alpha' type="double" value='$(arg Kp_alpha)'/>
+    <param name = 'Kp_beta' type="double" value='$(arg Kp_beta)'/>
+    <param name = 'dt' type="double" value = '$(arg dt)'/>
+    <param name = 'distance' type="double" value = '$(arg distance)'/>
+    <param name = 'cmd_type' type="int" value = "$(arg cmd_type)"/>
+    <param name = "parking_path" value = "$(arg parking_path)"/>
+    <param name = "debuging" value = "$(arg debuging)"/>
+    <param name = "stop_time" value = "$(arg stop_time)"/>
+    <param name = "back_time" value ="$(arg back_time)"/>
+    <param name = "back_speed" value = "$(arg back_speed)"/>
+    <param name = "curve_time" value = "$(arg curve_time)"/>
+    <param name = "curve_speed" value = "$(arg curve_speed)"/>
+  </node>
+</launch>
