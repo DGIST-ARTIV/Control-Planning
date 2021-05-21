@@ -66,6 +66,6 @@ This experiment conducted with **Hyundae Ioniq**
 ![](/images/AEB_Good.png)
 
 #### Lane Keeping System & Smart Cruise Control
-[**Blog Link**]( https://dgist-artiv.github.io/blog/2021/02/25/LKS_cruise_test.html)
-[![video](https://www.img.youtube.com/vi/5POMPtsQw7Y/0.jpg)](https://www.youtube.com/watch?v=5POMPtsQw7Y)
+[**Blog Link**]( https://dgist-artiv.github.io/blog/2021/02/25/LKS_cruise_test.html)\
+[![video](https://img.youtube.com/vi/5POMPtsQw7Y/0.jpg)](https://www.youtube.com/watch?v=5POMPtsQw7Y)
 
