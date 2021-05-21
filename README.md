@@ -10,8 +10,63 @@ Control_Planning 파트는 차량의 주행 경로 알고리즘(path-planning al
 ## 개괄
 ![슬라이드1](https://user-images.githubusercontent.com/59792475/87427806-4c514580-c61c-11ea-8115-62d565470eb7.JPG)
 
-## 통합 제어기 초안
-통합 소프트웨어 팀과 논의를 통해 매개노드를 완성해 나갈 예정.  
+## Path Planning
+### Summery
+ - State Lattice와 MPTG(Model Predictive Trajectory Generator)를 활용한 Local Path Planner를 제작했다.
+ - Lidar(RS Lidar or VLP-16)을 활용해 Obstacles Detection 하였으며[Lidar](https://github.com/DGIST-ARTIV/Lidar), MPTG를 활용하여 Lane State Sampling을 했다.
+ ### Algorithm
 
-좋은 의견 있으면 해당 링크에 들어가서 직접 추가해주시면 됩니다.
-[링크](https://docs.google.com/document/d/1VLWSfAJO5HXy743BQh0MvUTn8tgJZp8EJT_dN_WZPO8/edit?usp=sharing)
+  - MPTG
+  - State Lattice
+  - Dynamic Obstacle Avoidance
+  - move to pose
+
+ ### Result
+
+ #### Demo Video
+ ![demo](/images/Ioniq_test.gif)
+ ![demo](/images/ERP_MPTG.gif)
+ 
+ #### Figure
+
+ ![](/images/circle.png ) | ![](/images/straight-1cone.png )
+ :-------------------------:|:-------------------------:
+ ![](/images/straight-2cone.png) | ![](/images/straight-car.png)
+
+This experiment conducted with **Hyundae Ioniq**
+
+
+
+ ## Control
+ ### Summery
+  - PID제어를 활용한 Ioniq 종방향 속도제어
+  - Lidar를 활용한 SCC(Smart Cruise Control)
+  - AEB(Auto Emergency Braking)
+  - Pure Pursuit, Stanly Method를 활용한 Lane Keeping Assistance System(LKAS), Global Path Following(GPS기반)
+  - Move to Pose Control : Simple Geometric Control -> For Parking and MPTG
+
+### Algorithm
+ - PID
+ - Stanly
+ - Pure Pursuit
+ - Move to Pose
+ - Smart Cruise Control
+ - Auto Emergency Braking
+ - Lane Keeping System
+### Result
+
+#### PID Control
+[링크](./pid_ui)
+
+#### SCC
+
+#### Lane Keeping System
+[Hybrid Tracker Based Optimal Path Tracking System of Autonomous Driving for Complex Road Environments](https://ieeexplore.ieee.org/document/9427137?source=authoralert)
+#### AEB
+![](/images/AEB_Good.png)
+
+#### Lane Keeping System & Smart Cruise Control
+[**Blog Link**]( https://dgist-artiv.github.io/blog/2021/02/25/LKS_cruise_test.html)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5POMPtsQw7Y" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
