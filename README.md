@@ -56,7 +56,7 @@ This experiment conducted with **Hyundae Ioniq**
 ### Result
 
 #### PID Control
-[링크](./pid_ui)
+[링크](/Control/Ioniq/pid_ui)
 
 #### SCC
 
@@ -67,6 +67,5 @@ This experiment conducted with **Hyundae Ioniq**
 
 #### Lane Keeping System & Smart Cruise Control
 [**Blog Link**]( https://dgist-artiv.github.io/blog/2021/02/25/LKS_cruise_test.html)
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/5POMPtsQw7Y" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[!video](https://www.youtube.com/embed/5POMPtsQw7Y/0.jpg)](https://www.youtube.com/embed/5POMPtsQw7Y)
 
