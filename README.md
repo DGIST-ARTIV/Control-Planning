@@ -25,9 +25,11 @@ Control_Planning 파트는 차량의 주행 경로 알고리즘(path-planning al
 
  #### Demo Video
  ![demo](/images/Ioniq_test.gif)
- ![demo](/images/ERP_MPTG.gif)
- 
- #### Figure
+#### Youtube Videos
+ [![ERP video](https://img.youtube.com/vi/E_8HAf1OwA8/0.jpg)](https://www.youtube.com/watch?v=E_8HAf1OwA8) | [![Ioniq video](https://img.youtube.com/vi/KWBubw8ciBU/0.jpg)](https://www.youtube.com/watch?v=KWBubw8ciBU) 
+  :-------------------------:|:-------------------------:
+
+#### Figure
 
  ![](/images/circle.png ) | ![](/images/straight-1cone.png )
  :-------------------------:|:-------------------------:
@@ -66,6 +68,7 @@ This experiment conducted with **Hyundae Ioniq**
 ![](/images/AEB_Good.png)
 
 #### Lane Keeping System & Smart Cruise Control
-[**Blog Link**]( https://dgist-artiv.github.io/blog/2021/02/25/LKS_cruise_test.html)\
+[**Blog Link**]( https://dgist-artiv.github.io/blog/2021/02/25/LKS_cruise_test.html)
+#### Youtube Video
 [![video](https://img.youtube.com/vi/5POMPtsQw7Y/0.jpg)](https://www.youtube.com/watch?v=5POMPtsQw7Y)
 
