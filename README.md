@@ -57,18 +57,20 @@ This experiment conducted with **Hyundae Ioniq**
  - Lane Keeping System
 ### Result
 
-#### PID Control
+### PID Control
 [링크](/Control/Ioniq/pid_ui)
 
-#### SCC
-
-#### Lane Keeping System
-[Hybrid Tracker Based Optimal Path Tracking System of Autonomous Driving for Complex Road Environments](https://ieeexplore.ieee.org/document/9427137?source=authoralert)
-#### AEB
-![](/images/AEB_Good.png)
-
-#### Lane Keeping System & Smart Cruise Control
+### Lane Keeping System & Smart Cruise Control
 [**Blog Link**]( https://dgist-artiv.github.io/blog/2021/02/25/LKS_cruise_test.html)
 #### Youtube Video
 [![video](https://img.youtube.com/vi/5POMPtsQw7Y/0.jpg)](https://www.youtube.com/watch?v=5POMPtsQw7Y)
+#### Paper
+[Hybrid Tracker Based Optimal Path Tracking System of Autonomous Driving for Complex Road Environments](https://ieeexplore.ieee.org/document/9427137?source=authoralert)
 
+#### AEB
+![](/images/AEB_Good.png)
+
+### Parking
+
+#### Youtube Video
+[![video](https://img.youtube.com/vi/-xkI9TswtBQ/0.jpg)](https://www.youtube.com/watch?v=-xkI9TswtBQ)
